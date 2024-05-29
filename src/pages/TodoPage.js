@@ -5,7 +5,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 
-const TodoPage = () => {
+const TodoPage = ({ user, setUser }) => {
   const [todoList, setTodoList] = useState([]);
   const [todoValue, setTodoValue] = useState("");
 
@@ -45,7 +45,6 @@ const TodoPage = () => {
   };
   const deleteItem = async (id) => {
     try {
-      console.log(id);
       const response = await api.delete(`/tasks/${id}`);
       if (response.status === 200) {
         getTasks();
@@ -54,12 +53,22 @@ const TodoPage = () => {
       console.log("error", error);
     }
   };
-
+  const logout = () => {
+    setUser(null);
+    sessionStorage.removeItem("token");
+  };
   useEffect(() => {
     getTasks();
   }, []);
   return (
     <Container>
+      <div>
+        {user.name}님 안녕하세요
+        <button className="logout" onClick={logout}>
+          로그아웃
+        </button>
+      </div>
+
       <Row className="add-item-row">
         <Col xs={12} sm={10}>
           <input
